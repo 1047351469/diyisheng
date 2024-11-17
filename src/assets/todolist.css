@@ -1,0 +1,128 @@
+/* 页面整体样式 */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f9;
+    margin: 0;
+  }
+  
+  /* 主容器 */
+  .todo-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 标题样式 */
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* 搜索框样式 */
+  .search-container input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* 添加新任务区域样式 */
+  .add-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .add-container input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .add-container button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .add-container button:hover {
+    background-color: #45a049;
+  }
+  
+  /* 任务列表样式 */
+  .task-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .task-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+  
+  .task-list li.completed {
+    text-decoration: line-through;
+    color: #888;
+  }
+  
+  /* 任务操作按钮 */
+  .task-actions {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .task-actions button {
+    border: none;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .task-actions .complete-btn {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .task-actions .edit-btn {
+    background-color: #ff9800;
+    color: white;
+  }
+  
+  .task-actions .delete-btn {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .task-actions button:hover {
+    opacity: 0.9;
+  }
+  
+  /* 统计信息样式 */
+  .stats {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+  }
+  
