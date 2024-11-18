@@ -44,15 +44,18 @@ const navigateToAbout = () => {
   router.push({ name: 'about' ,params:{id:22}}); // 跳转到命名路由 'about'
 };
 
-
+const flag=ref(true)
 </script>
 
 <template>
-     <RouterLink to="/">Go to Home</RouterLink>
+  <div @click="flag=!flag" v-if="flag">
+    <RouterLink to="/">Go to Home</RouterLink>
      <RouterLink to="/about">Go to About</RouterLink>
      {{ useRoute().path }}
      <span @click="navigateToAbout">手动导航</span>
   <RouterView />
+  </div>
+    
 </template>
 
 <style scoped></style>

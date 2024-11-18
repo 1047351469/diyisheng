@@ -1,0 +1,17 @@
+数组方法 
+ some every filter map find findIndex keys vaules entries返回迭代器对象
+  indexOf  lastIndexOf push pop shift unshift slice
+  splice sort reverse concat reduce归约函数，每个元素都会调用该函数，将元素累积到最终结果中
+  from(有length属性的转换为数组) of直接创建数组 includes fill填充
+
+字符串方法
+ includes startsWith endsWith repeat padStart填充 padEnd trimStart trimEnd trim
+ replace split
+ 解构 跳过 剩余 默认值 嵌套 改变变量名
+ 
+ 对象
+  freeze不修改 seal不新增删除 assign浅拷贝解构
+  .catch .then .finally  Promise.reject resolve
+promise race超时处理 all(并行异步按照数组对应) any(第一个成功的)
+ allSettled 返回所有Promise 的状态和结果
+promise定义中抛异常当reject处理
