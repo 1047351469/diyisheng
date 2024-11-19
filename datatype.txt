@@ -1,0 +1,6 @@
+{
+    data:T,
+    code:1, 1成功，0和其它数字为失败
+    map动态数据,hashmap
+    msg 错误信息
+}

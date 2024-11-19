@@ -1,0 +1,95 @@
+axios.get('/api/success')
+  .then(response => {
+    console.log('成功响应:', response.data);
+  })
+  .catch(error => {
+    console.error('请求失败:', error);
+  });
+
+axios.get('/api/not-found')
+  .catch(error => {
+    if (error.response) {
+      console.error('客户端错误: 状态码', error.response.status);
+      switch (error.response.status) {
+        case 400:
+          console.error('参数错误！');
+          break;
+        case 401:
+          console.error('请登录后再试！');
+          break;
+        case 403:
+          console.error('无权限访问该资源！');
+          break;
+        case 404:
+          console.error('资源未找到！');
+          break;
+        default:
+          console.error('其他客户端错误！');
+      }
+    }
+  });
+
+axios.get('/api/server-error')
+  .catch(error => {
+    if (error.response) {
+      console.error('服务器错误: 状态码', error.response.status);
+      switch (error.response.status) {
+        case 500:
+          console.error('服务器内部错误！');
+          break;
+        case 502:
+          console.error('网关错误！');
+          break;
+        case 503:
+          console.error('服务不可用！');
+          break;
+        case 504:
+          console.error('网关超时！');
+          break;
+        default:
+          console.error('其他服务器错误！');
+      }
+    }
+  });
+axios.get('/api/redirect')
+  .then(response => {
+    if (response.status === 301 || response.status === 302) {
+      console.log('重定向到:', response.headers.location);
+    }
+  });
+axios.get('/api/network-error')
+  .catch(error => {
+    if (!error.response) {
+      console.error('网络错误或无响应！', error.message);
+    }
+  });
+axios.get('/api/timeout', { timeout: 1000 }) // 设置超时时间为 1000 毫秒
+  .catch(error => {
+    if (error.code === 'ECONNABORTED') {
+      console.error('请求超时！');
+    }
+  });
+const controller = new AbortController();
+axios.get('/api/cancel', { signal: controller.signal })
+  .catch(error => {
+    if (axios.isCancel(error)) {
+      console.error('请求被取消！');
+    }
+  });
+
+// 取消请求
+controller.abort();
+axios.interceptors.response.use(
+  response => response, // 成功响应直接返回
+  error => {
+    if (error.response) {
+      console.error('错误状态:', error.response.status);
+      console.error('错误信息:', error.response.data);
+    } else if (error.request) {
+      console.error('无响应，请检查网络或服务器！');
+    } else {
+      console.error('请求配置错误:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
