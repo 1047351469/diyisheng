@@ -56,12 +56,7 @@ app.mount('#app')
   //   .catch((error) => {
   //     console.error(error);
   //   });
-  try{
-    let a={}
-    console.log(a.b())
-  }catch(err){
-    console.error(err)
-  }
+
   
 
 

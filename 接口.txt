@@ -1,0 +1,11 @@
+请求 url method headers params(get ?&)
+ post body(raw-json) x-www-form-urlencoded表单 binary文件上传
+ pre-request-script 
+  pm.globals.set("username", "admin"); 
+   pm.globals.get("username")
+   pm.globals.unset("username"); 
+   pm.globals.clear(); 
+   取"{{username}}"
+   // 获取当前时间并格式化为指定格式
+const moment = require('moment'); // Postman 环境内置了 moment.js
+pm.environment.set("current_time", moment().format('YYYY-MM-DD HH:mm:ss'))

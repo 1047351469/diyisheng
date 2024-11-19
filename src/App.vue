@@ -9,32 +9,12 @@ const inputDate = "020422 10:53:01PM";
 
 useEventListener('mousemove', () => {
   // console.error(x.value,y.value)
+  
 })
-// // 自定义函数来解析和转换日期格式
-function customParseDate(dateStr) {
-  // 将输入字符串 "020422 10:53:01PM" 分割
-  const [date, time] = dateStr.split(" ");
-  const month = date.slice(0, 2);
-  const day = date.slice(2, 4);
-  const year = "20" + date.slice(4, 6); // 假设年份为 2000 年代
-
-  let [hour, minute, second] = time.slice(0, 8).split(":");
-  const period = time.slice(8);
-
-  // 将 12 小时制转换为 24 小时制
-  if (period === "PM" && hour !== "12") {
-    hour = (parseInt(hour) + 12).toString();
-  } else if (period === "AM" && hour === "12") {
-    hour = "00";
-  }
-
-  // 使用 dayjs 格式化为 "YYYYMMDD HH:mm:ss"
-  return dayjs(`${year}-${month}-${day} ${hour}:${minute}:${second}`).format("YYYY年MM月DD HH:mm:ss");
-}
 
 
-const formattedDate = customParseDate("020422 10:53:01AM");
-console.log(formattedDate); 
+
+
 import { useRoute,useRouter } from 'vue-router';
       
 const router = useRouter(); // 获取 router 实例
@@ -44,17 +24,31 @@ const navigateToAbout = () => {
   router.push({ name: 'about' ,params:{id:22}}); // 跳转到命名路由 'about'
 };
 
-const flag=ref(true)
+
+import xtxMessage from "./components/xtx-message.vue"
+import Message from '@/components/Message.js'
+import xtxSkeleton from "@/components/xtx-skeleton.vue"
+// 定义计数器状态
+const count = ref(0);
+
+// 定义累加器方法
+const increment = () => {
+  count.value++;
+  Message({text:count.value})
+};
+
 </script>
 
 <template>
-  <div @click="flag=!flag" v-if="flag">
+  <xtx-skeleton bg="#e4e4e4" width="306px" height="306px" animated/>
+  <VBtn @click="increment">点击</VBtn>
+ 
     <RouterLink to="/">Go to Home</RouterLink>
      <RouterLink to="/about">Go to About</RouterLink>
      {{ useRoute().path }}
      <span @click="navigateToAbout">手动导航</span>
   <RouterView />
-  </div>
+
     
 </template>
 
