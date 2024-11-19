@@ -1,0 +1,35 @@
+import { defineAsyncComponent } from 'vue';
+
+// 批量导入当前目录下的所有 `.vue` 文件
+const components = import.meta.glob('./*.vue');
+
+// 导出一个注册函数
+export default {
+  install(app) {
+    for (const [path, resolver] of Object.entries(components)) {
+      // 使用文件名作为组件名（去掉路径和扩展名）
+      const componentName = path.split('/').pop().replace('.vue', '');
+      // 注册组件
+      app.component(componentName, defineAsyncComponent(resolver));
+    }
+  },
+};
+
+
+export default {
+  install(app) {
+    const plugins = import.meta.glob('./*.js', { eager: true });
+
+    // 创建一个对象用于存储所有方法
+    const methods = {};
+
+    for (const [path, module] of Object.entries(plugins)) {
+      if (path !== './index.js') {
+        Object.assign(methods, module);
+      }
+    }
+
+    // 将方法挂载到全局属性上
+    app.config.globalProperties.$utils = methods;
+  },
+};
