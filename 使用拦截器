@@ -1,0 +1,25 @@
+<template>
+  <div>
+    <button @click="fetchData">调用接口</button>
+    <p v-if="loadingLogs.length">加载日志: {{ loadingLogs }}</p>
+    <p v-if="timeLogs.length">时间日志: {{ timeLogs }}</p>
+    <p v-if="errorLogs.length">错误日志: {{ errorLogs }}</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { useLogStore } from '@/stores/logStore';
+import apiClient from '@/utils/apiClient';
+
+const logStore = useLogStore();
+
+const fetchData = async () => {
+  try {
+    const response = await apiClient.get('/endpoint');
+    console.log('响应结果:', response);
+  } catch (error) {
+    console.error('请求失败:', error);
+  }
+};
+</script>
