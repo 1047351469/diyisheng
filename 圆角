@@ -93,3 +93,99 @@ const toggleExternalFill = () => {
   isFilled.value = !isFilled.value;
 };
 </script>
+
+<template>
+  <div
+    :style="circleStyle"
+    @click="toggleValue"
+  ></div>
+</template>
+
+<script setup>
+import { computed, ref, watch } from 'vue';
+import { defineProps, defineEmits } from 'vue';
+
+// 定义 props
+defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false, // 是否填充颜色，支持 v-model
+  },
+  size: {
+    type: [String, Number],
+    default: 100, // 圆的直径，默认 100px
+  },
+  borderColor: {
+    type: String,
+    default: '#000', // 边框颜色，默认黑色
+  },
+  fillColor: {
+    type: String,
+    default: '#00f', // 填充颜色，默认蓝色
+  },
+});
+
+// 定义 emits
+const emit = defineEmits(['update:modelValue']);
+
+// 内部响应式值，用于双向绑定
+const value = ref(modelValue);
+
+// 监听外部传入的 `modelValue`，同步到内部的 `value`
+watch(
+  () => modelValue,
+  (newValue) => {
+    value.value = newValue;
+  }
+);
+
+// 计算圆的样式
+const circleStyle = computed(() => ({
+  width: `${size}px`,
+  height: `${size}px`,
+  border: `2px solid ${borderColor}`,
+  borderRadius: '50%',
+  backgroundColor: value.value ? fillColor : 'transparent',
+  cursor: 'pointer',
+}));
+
+// 切换填充状态
+const toggleValue = () => {
+  value.value = !value.value; // 改变内部状态
+  emit('update:modelValue', value.value); // 通知外部更新 v-model
+};
+</script>
+
+<style scoped>
+/* 可选：添加鼠标点击的动画效果 */
+div {
+  transition: background-color 0.3s;
+}
+</style>
+
+<template>
+  <div>
+    <h1>圆形组件示例</h1>
+    <p>是否填充: {{ isFilled }}</p>
+    <Circle
+      v-model="isFilled"
+      :size="150"
+      borderColor="red"
+      fillColor="green"
+    />
+    <button @click="toggleValue">外部切换填充状态</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import Circle from './Circle.vue';
+
+// 控制圆形填充状态
+const isFilled = ref(false);
+
+// 外部按钮切换填充状态
+const toggleValue = () => {
+  isFilled.value = !isFilled.value;
+};
+</script>
