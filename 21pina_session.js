@@ -211,3 +211,47 @@ export function piniaStoragePlugin({ store, options }) {
     });
   }
 }
+
+// src/plugins/piniaStoragePlugin.js
+export function piniaStoragePlugin({ store, options }) {
+  const persist = options?.persist;
+
+  // 如果未启用持久化，直接返回
+  if (!persist) return;
+
+  // 配置存储类型（默认 sessionStorage）
+  const storageType = persist.storage || 'session'; // 'session' 或 'local'
+  const storage = storageType === 'local' ? localStorage : sessionStorage;
+
+  // 配置存储键名（默认 pinia-storeId）
+  const storageKey = persist.key || `pinia-${store.$id}`;
+
+  // 初始化：从 storage 加载数据到 Pinia Store
+  const storedData = storage.getItem(storageKey);
+  if (storedData) {
+    store.$patch(JSON.parse(storedData));
+  }
+
+  // 监听 Pinia Store 的变化，同步到 storage
+  store.$subscribe((_, state) => {
+    storage.setItem(storageKey, JSON.stringify(state));
+  });
+
+  // 添加浏览器关闭清理逻辑
+  if (storageType === 'session') {
+    const refreshKey = `pinia-refresh-${store.$id}`;
+
+    // 标记刷新行为
+    sessionStorage.setItem(refreshKey, 'true');
+
+    window.addEventListener('beforeunload', () => {
+      if (sessionStorage.getItem(refreshKey)) {
+        // 如果是刷新行为，保留数据
+        sessionStorage.removeItem(refreshKey);
+      } else {
+        // 如果是关闭行为，清除数据
+        storage.removeItem(storageKey);
+      }
+    });
+  }
+}
