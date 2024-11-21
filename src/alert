@@ -5,50 +5,38 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 
-// 定义 props
-defineProps({
-  type: {
-    type: String,
-    default: 'info', // 提示类型: success, error, warning, info
-  },
-  message: {
-    type: String,
-    required: true, // 提示信息
-  },
-  duration: {
-    type: Number,
-    default: 3000, // 自动消失时间（毫秒）
-  },
-  autoDismiss: {
-    type: Boolean,
-    default: true, // 是否自动消失
-  },
-});
+// 内部状态
+const visible = ref(false);
+const message = ref('');
+const type = ref('info');
+const duration = ref(3000);
 
-// 控制显示状态
-const visible = ref(true);
+// 动态样式
+const alertClass = computed(() => ({
+  alert: true,
+  'alert-success': type.value === 'success',
+  'alert-error': type.value === 'error',
+  'alert-warning': type.value === 'warning',
+  'alert-info': type.value === 'info',
+}));
 
-// 根据 `type` 动态生成样式类
-const alertClass = computed(() => {
-  return {
-    alert: true,
-    'alert-success': type === 'success',
-    'alert-error': type === 'error',
-    'alert-warning': type === 'warning',
-    'alert-info': type === 'info',
-  };
-});
+// 显示 Alert 的方法
+const showAlert = (options) => {
+  message.value = options.message || '提示信息';
+  type.value = options.type || 'info';
+  duration.value = options.duration || 3000;
 
-// 自动消失逻辑
-onMounted(() => {
-  if (autoDismiss) {
-    setTimeout(() => {
-      visible.value = false;
-    }, duration);
-  }
-});
+  visible.value = true;
+
+  setTimeout(() => {
+    visible.value = false;
+  }, duration.value);
+};
+
+// 暴露方法
+export { showAlert };
 </script>
 
 <style scoped>
@@ -79,54 +67,55 @@ onMounted(() => {
 }
 </style>
 
+
+import { createApp, h } from 'vue';
+import Alert, { showAlert } from './Alert.vue';
+
+let alertInstance = null;
+
+const mountAlert = () => {
+  if (!alertInstance) {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    alertInstance = createApp(Alert).mount(container);
+  }
+};
+
+// 全局调用方法
+const AlertService = (options) => {
+  mountAlert();
+  showAlert(options);
+};
+
+export default AlertService;
+
 <template>
   <div>
-    <h1>Alert 提示示例</h1>
-    <button @click="showSuccess">显示成功提示</button>
-    <button @click="showError">显示错误提示</button>
-    <button @click="showWarning">显示警告提示</button>
-    <button @click="showInfo">显示信息提示</button>
-    <Alert
-      v-if="showAlert"
-      :type="alertType"
-      :message="alertMessage"
-      :duration="alertDuration"
-    />
+    <h1>通过方法调用显示 Alert</h1>
+    <button @click="showSuccess">成功提示</button>
+    <button @click="showError">错误提示</button>
+    <button @click="showWarning">警告提示</button>
+    <button @click="showInfo">信息提示</button>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import Alert from './Alert.vue';
-
-const showAlert = ref(false);
-const alertType = ref('info');
-const alertMessage = ref('');
-const alertDuration = ref(3000);
-
-const triggerAlert = (type, message, duration = 3000) => {
-  alertType.value = type;
-  alertMessage.value = message;
-  alertDuration.value = duration;
-  showAlert.value = true;
-  setTimeout(() => {
-    showAlert.value = false; // 隐藏提示
-  }, duration);
-};
+import AlertService from './alertService';
 
 const showSuccess = () => {
-  triggerAlert('success', '操作成功！', 3000);
+  AlertService({ type: 'success', message: '操作成功！', duration: 3000 });
 };
 
 const showError = () => {
-  triggerAlert('error', '发生错误，请重试！', 3000);
+  AlertService({ type: 'error', message: '发生错误！', duration: 3000 });
 };
 
 const showWarning = () => {
-  triggerAlert('warning', '警告：请注意操作！', 3000);
+  AlertService({ type: 'warning', message: '请注意警告！', duration: 3000 });
 };
 
 const showInfo = () => {
-  triggerAlert('info', '这是一个提示信息。', 3000);
+  AlertService({ type: 'info', message: '这是提示信息。', duration: 3000 });
 };
 </script>
