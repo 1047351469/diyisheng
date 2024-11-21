@@ -1,0 +1,291 @@
+<template>
+  <div
+    :style="outerCircleStyle"
+    @click="toggleBackground"
+  >
+    <div :style="innerCircleStyle"></div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+
+// 定义 props
+defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false, // 内圆是否高亮，父组件通过 v-model 绑定
+  },
+  outerRadius: {
+    type: Number,
+    default: 50, // 外圆半径，默认 50px
+  },
+  innerRadius: {
+    type: Number,
+    default: 30, // 内圆半径，默认 30px
+  },
+  borderColor: {
+    type: String,
+    default: '#000', // 外圆边框颜色
+  },
+  outerFillColor: {
+    type: String,
+    default: '#ccc', // 外圆填充颜色
+  },
+  innerFillColor: {
+    type: String,
+    default: '#00f', // 内圆高亮颜色
+  },
+  transitionDuration: {
+    type: [String, Number],
+    default: 300, // 过渡效果时间，默认 300ms
+  },
+});
+
+// 定义事件
+const emit = defineEmits(['update:modelValue']);
+
+// 计算外圆的样式
+const outerCircleStyle = computed(() => ({
+  width: `${outerRadius * 2}px`,
+  height: `${outerRadius * 2}px`,
+  border: `2px solid ${borderColor}`,
+  borderRadius: '50%',
+  backgroundColor: outerFillColor,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  position: 'relative',
+}));
+
+// 计算内圆的样式
+const innerCircleStyle = computed(() => ({
+  width: `${innerRadius * 2}px`,
+  height: `${innerRadius * 2}px`,
+  borderRadius: '50%',
+  backgroundColor: modelValue ? innerFillColor : 'transparent',
+  transition: `background-color ${transitionDuration}ms ease-in-out`,
+}));
+
+// 切换内圆背景颜色
+const toggleBackground = () => {
+  emit('update:modelValue', !modelValue); // 更新 v-model
+};
+</script>
+
+<style scoped>
+/* 可选：hover 效果 */
+div:hover {
+  opacity: 0.9;
+}
+</style>
+
+下面是一个可以 通过 props 动态指定内圆和外圆半径 的 Vue 3 组件实现，使用 script setup 编写。
+
+
+---
+
+组件：CircleButton.vue
+
+<template>
+  <div
+    :style="outerCircleStyle"
+    @click="toggleBackground"
+  >
+    <div :style="innerCircleStyle"></div>
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+
+// 定义 props
+defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false, // 内圆是否高亮，父组件通过 v-model 绑定
+  },
+  outerRadius: {
+    type: Number,
+    default: 50, // 外圆半径，默认 50px
+  },
+  innerRadius: {
+    type: Number,
+    default: 30, // 内圆半径，默认 30px
+  },
+  borderColor: {
+    type: String,
+    default: '#000', // 外圆边框颜色
+  },
+  outerFillColor: {
+    type: String,
+    default: '#ccc', // 外圆填充颜色
+  },
+  innerFillColor: {
+    type: String,
+    default: '#00f', // 内圆高亮颜色
+  },
+  transitionDuration: {
+    type: [String, Number],
+    default: 300, // 过渡效果时间，默认 300ms
+  },
+});
+
+// 定义事件
+const emit = defineEmits(['update:modelValue']);
+
+// 计算外圆的样式
+const outerCircleStyle = computed(() => ({
+  width: `${outerRadius * 2}px`,
+  height: `${outerRadius * 2}px`,
+  border: `2px solid ${borderColor}`,
+  borderRadius: '50%',
+  backgroundColor: outerFillColor,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  position: 'relative',
+}));
+
+// 计算内圆的样式
+const innerCircleStyle = computed(() => ({
+  width: `${innerRadius * 2}px`,
+  height: `${innerRadius * 2}px`,
+  borderRadius: '50%',
+  backgroundColor: modelValue ? innerFillColor : 'transparent',
+  transition: `background-color ${transitionDuration}ms ease-in-out`,
+}));
+
+// 切换内圆背景颜色
+const toggleBackground = () => {
+  emit('update:modelValue', !modelValue); // 更新 v-model
+};
+</script>
+
+<style scoped>
+/* 可选：hover 效果 */
+div:hover {
+  opacity: 0.9;
+}
+</style>
+
+
+---
+
+父组件示例：App.vue
+
+<template>
+  <div>
+    <h1>同心圆按钮</h1>
+    <p>当前状态: {{ isFilled ? '高亮' : '未高亮' }}</p>
+    <CircleButton
+      v-model="isFilled"
+      :outerRadius="75"
+      :innerRadius="40"
+      borderColor="black"
+      outerFillColor="#f0f0f0"
+      innerFillColor="green"
+      :transitionDuration="500"
+    />
+    <button @click="toggleValue">外部切换</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import CircleButton from './CircleButton.vue';
+
+// 控制内圆高亮状态
+const isFilled = ref(false);
+
+// 外部按钮切换状态
+const toggleValue = () => {
+  isFilled.value = !isFilled.value;
+};
+</script>
+
+
+---
+
+功能说明
+
+1. 动态指定内外圆半径：
+
+使用 outerRadius 和 innerRadius props 分别定义外圆和内圆的半径。
+
+外圆和内圆的直径通过 `
+
+
+
+
+<script setup>
+import { computed, toRefs } from 'vue';
+
+// 显式定义 props 对象
+const props = defineProps({
+  modelValue: {
+    type: Boolean,
+    default: false, // 内圆是否高亮，父组件通过 v-model 绑定
+  },
+  outerRadius: {
+    type: Number,
+    default: 50, // 外圆半径，默认 50px
+  },
+  innerRadius: {
+    type: Number,
+    default: 30, // 内圆半径，默认 30px
+  },
+  borderColor: {
+    type: String,
+    default: '#000', // 外圆边框颜色
+  },
+  outerFillColor: {
+    type: String,
+    default: '#ccc', // 外圆填充颜色
+  },
+  innerFillColor: {
+    type: String,
+    default: '#00f', // 内圆高亮颜色
+  },
+  transitionDuration: {
+    type: [String, Number],
+    default: 300, // 过渡效果时间，默认 300ms
+  },
+});
+
+// 解构 props
+const { modelValue, outerRadius, innerRadius, borderColor, outerFillColor, innerFillColor, transitionDuration } = toRefs(props);
+
+// 定义事件
+const emit = defineEmits(['update:modelValue']);
+
+// 计算外圆的样式
+const outerCircleStyle = computed(() => ({
+  width: `${outerRadius.value * 2}px`,
+  height: `${outerRadius.value * 2}px`,
+  border: `2px solid ${borderColor.value}`,
+  borderRadius: '50%',
+  backgroundColor: outerFillColor.value,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  position: 'relative',
+}));
+
+// 计算内圆的样式
+const innerCircleStyle = computed(() => ({
+  width: `${innerRadius.value * 2}px`,
+  height: `${innerRadius.value * 2}px`,
+  borderRadius: '50%',
+  backgroundColor: modelValue.value ? innerFillColor.value : 'transparent',
+  transition: `background-color ${transitionDuration.value}ms ease-in-out`,
+}));
+
+// 切换内圆背景颜色
+const toggleBackground = () => {
+  emit('update:modelValue', !modelValue.value); // 更新 v-model
+};
+</script>
