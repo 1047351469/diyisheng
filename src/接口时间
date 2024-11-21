@@ -1,0 +1,32 @@
+export const timingInterceptor = {
+  onRequest: (config) => {
+    config.metadata = { startTime: new Date().getTime() };
+    return config;
+  },
+  onResponse: (response) => {
+    const duration = new Date().getTime() - response.config.metadata.startTime;
+    const log = {
+      url: response.config.url,
+      method: response.config.method,
+      duration,
+      status: response.status,
+    };
+    const logStore = useLogStore();
+    logStore.addTimeLog(log);
+    return response;
+  },
+  onError: (error) => {
+    if (error.config?.metadata) {
+      const duration = new Date().getTime() - error.config.metadata.startTime;
+      const log = {
+        url: error.config.url,
+        method: error.config.method,
+        duration,
+        error: error.message,
+      };
+      const logStore = useLogStore();
+      logStore.addTimeLog(log);
+    }
+    return Promise.reject(error);
+  },
+};
