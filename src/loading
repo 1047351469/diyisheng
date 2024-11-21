@@ -1,0 +1,22 @@
+let loadingCount = 0;
+
+export const loadingInterceptor = {
+  onRequest: (config) => {
+    loadingCount++;
+    const logStore = useLogStore();
+    logStore.addLoadingLog({ url: config.url, state: 'start' });
+    return config;
+  },
+  onResponse: (response) => {
+    loadingCount--;
+    const logStore = useLogStore();
+    logStore.addLoadingLog({ url: response.config.url, state: 'end' });
+    return response;
+  },
+  onError: (error) => {
+    loadingCount--;
+    const logStore = useLogStore();
+    logStore.addLoadingLog({ url: error.config?.url, state: 'end' });
+    return Promise.reject(error);
+  },
+};
