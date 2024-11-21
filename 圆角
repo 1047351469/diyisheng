@@ -65,3 +65,30 @@ div {
   transition: background-color 0.3s;
 }
 </style>
+
+<template>
+  <div>
+    <h1>圆形按钮示例</h1>
+    <p>是否填充: {{ isFilled }}</p>
+    <CircleButton
+      v-model="isFilled"
+      :size="150"
+      borderColor="red"
+      fillColor="green"
+    />
+    <button @click="toggleExternalFill">外部切换填充状态</button>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import CircleButton from './CircleButton.vue';
+
+// 控制圆形填充状态
+const isFilled = ref(false);
+
+// 外部切换填充状态
+const toggleExternalFill = () => {
+  isFilled.value = !isFilled.value;
+};
+</script>
