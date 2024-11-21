@@ -1,0 +1,15 @@
+tr {
+  display: flex;
+
+  td {
+    flex: 1; // 默认每列平分
+
+    &:first-child {
+      flex: 3; // 第一个 td 占 3 份
+    }
+
+    &:nth-child(2) {
+      flex: 2; // 第二个 td 占 2 份
+    }
+  }
+}
