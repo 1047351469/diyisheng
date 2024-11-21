@@ -1,0 +1,25 @@
+export const resultInterceptor = {
+  onResponse: (response) => {
+    const { data } = response;
+    if (data.success) {
+      return data.result;
+    } else {
+      const log = {
+        url: response.config.url,
+        error: data.message || '接口返回失败',
+      };
+      const logStore = useLogStore();
+      logStore.addErrorLog(log);
+      return Promise.reject(new Error(data.message || '接口返回失败'));
+    }
+  },
+  onError: (error) => {
+    const logStore = useLogStore();
+    const log = {
+      url: error.config?.url || '未知',
+      error: error.message || '未知错误',
+    };
+    logStore.addErrorLog(log);
+    return Promise.reject(error);
+  },
+};
