@@ -178,3 +178,36 @@ export const useMyStore = defineStore('myStore', {
       this.myObject = { name: '', age: 0 };
     },
 
+// src/plugins/piniaStoragePlugin.js
+export function piniaStoragePlugin({ store, options }) {
+  const persist = options?.persist;
+
+  // 如果未启用持久化，直接返回
+  if (!persist) return;
+
+  // 配置存储类型（默认 sessionStorage）
+  const storageType = persist.storage || 'session'; // 'session' 或 'local'
+  const storage = storageType === 'local' ? localStorage : sessionStorage;
+
+  // 配置存储键名（默认 pinia-storeId）
+  const storageKey = persist.key || `pinia-${store.$id}`;
+
+  // 初始化：从 storage 加载数据到 Pinia Store
+  const storedData = storage.getItem(storageKey);
+  if (storedData) {
+    store.$patch(JSON.parse(storedData));
+  }
+
+  // 监听 Pinia Store 的变化，同步到 storage
+  store.$subscribe((_, state) => {
+    storage.setItem(storageKey, JSON.stringify(state));
+  });
+
+  // 添加刷新和关闭页面的清理逻辑
+  if (storageType === 'session') {
+    // 使用 Vue 生命周期监听浏览器关闭时清除 sessionStorage
+    window.addEventListener('beforeunload', () => {
+      storage.removeItem(storageKey);
+    });
+  }
+}
