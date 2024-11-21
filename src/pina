@@ -1,0 +1,41 @@
+// src/stores/logStore.js
+import { defineStore } from 'pinia';
+
+export const useLogStore = defineStore('logStore', {
+  state: () => ({
+    timeLogs: [], // 存储接口时间日志
+    errorLogs: [], // 存储错误日志
+    loadingLogs: [], // 存储 loading 状态日志
+    authLogs: [], // 存储 token/refreshToken 相关日志
+  }),
+  actions: {
+    addTimeLog(log) {
+      this.timeLogs.push(log);
+    },
+    addErrorLog(log) {
+      this.errorLogs.push(log);
+    },
+    addLoadingLog(log) {
+      this.loadingLogs.push(log);
+    },
+    addAuthLog(log) {
+      this.authLogs.push(log);
+    },
+  },
+});
+
+import { createAxiosInstance } from './createAxiosInstance';
+import { timingInterceptor } from './interceptors/timingInterceptor';
+import { resultInterceptor } from './interceptors/resultInterceptor';
+import { loadingInterceptor } from './interceptors/loadingInterceptor';
+import { authInterceptor } from './interceptors/authInterceptor';
+
+const apiClient = createAxiosInstance(
+  {
+    baseURL: 'https://api.example.com',
+    timeout: 10000,
+  },
+  [timingInterceptor, resultInterceptor, loadingInterceptor, authInterceptor]
+);
+
+export default apiClient;
