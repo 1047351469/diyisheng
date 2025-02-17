@@ -1,0 +1,35 @@
+// ==========================
+// _variables.scss
+// 颜色变量定义
+// ==========================
+
+// 主色 (MainColor)
+$main-colors: (
+  "green": #269D4D,
+  "orange": #EB7F00,
+  "alert": #C7000D,
+  "blue": #1580DF,
+  "black": #232323,
+  "white": #FFFFFF
+);
+
+// 次要色 (SubColor)
+$sub-colors: (
+  "light-green": #F1FCF2,
+  "light-yellow": #FFFAD0,
+  "light-pink": #FFF0F0,
+  "light-blue": #E2F2FD,
+  "light-gray": #F4F4F4,
+  "gray": #CCCCCC,
+  "dark-gray": #707070
+);
+
+// 渐变色 (Gradation)
+$gradation-colors: (
+  "green": (#29AB54, #0C792F),
+  "green-alt": (#4DC475, #249147),
+  "orange": (#F78400, #DE6C01),
+  "orange-hover": (#FF8969, #DE6C01),
+  "light-gray": #FCFCFC,
+  "white-hover": #ECECEC
+);
