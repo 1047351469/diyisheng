@@ -1,4 +1,130 @@
 <template>
+  <div class="pulldown-container">
+    <!-- 选择框 -->
+    <div class="pulldown-box" @click="toggleDropdown" :class="{ selected: isSelected }">
+      <span class="selected-text">{{ selectedLabel || placeholder }}</span>
+      <span class="material-icons pulldown-icon">arrow_drop_down</span>
+    </div>
+
+    <!-- 下拉选项 -->
+    <ul v-if="isOpen" class="dropdown-menu">
+      <li
+        v-for="option in options"
+        :key="option.value"
+        @click="selectOption(option)"
+        :class="{ active: modelValue === option.value }"
+      >
+        {{ option.label }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, defineProps, defineEmits } from "vue";
+
+const props = defineProps({
+  modelValue: String, // 选中的值
+  options: Array, // 选项列表 [{ label: "昭和", value: "showa" }, ...]
+  placeholder: { type: String, default: "選択してください" }, // 默认占位文本
+});
+
+const emit = defineEmits(["update:modelValue"]);
+
+const isOpen = ref(false);
+const isSelected = computed(() => !!props.modelValue);
+const selectedLabel = computed(() => {
+  const selected = props.options.find(option => option.value === props.modelValue);
+  return selected ? selected.label : "";
+});
+
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const selectOption = (option) => {
+  emit("update:modelValue", option.value);
+  isOpen.value = false;
+};
+</script>
+
+<style scoped>
+/* 外部容器 */
+.pulldown-container {
+  position: relative;
+  width: 200px;
+}
+
+/* 选择框 */
+.pulldown-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  background-color: #fffae0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 50px;
+  max-width: 200px;
+}
+
+/* 选中状态 */
+.selected {
+  border-color: #1588df;
+  background-color: #e4f2fd;
+}
+
+/* 选中的文本 */
+.selected-text {
+  font-size: 22pt;
+  font-weight: medium;
+  color: #232323;
+}
+
+/* 下拉箭头 */
+.pulldown-icon {
+  font-size: 28px;
+  color: #269d4d;
+}
+
+/* 下拉菜单 */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 5px 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 下拉选项 */
+.dropdown-menu li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dropdown-menu li:hover {
+  background: #fffae0;
+}
+
+/* 选中状态 */
+.dropdown-menu li.active {
+  background: #1588df;
+  color: white;
+}
+</style>
+
+
+
+<template>
   <div
     class="radio-button"
     :class="{ selected: isSelected, error: hasError }"
