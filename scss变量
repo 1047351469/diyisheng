@@ -1,3 +1,94 @@
+<template>
+  <div
+    class="radio-button"
+    :class="{ selected: isSelected, error: hasError }"
+    @click="selectRadio"
+  >
+    <!-- Radio Icon -->
+    <div class="radio-icon">
+      <div v-if="isSelected" class="radio-center"></div>
+    </div>
+
+    <!-- 文本 -->
+    <span class="radio-label">{{ label }}</span>
+  </div>
+</template>
+
+<script setup>
+import { ref, defineProps, defineEmits } from "vue";
+
+const props = defineProps({
+  label: String,
+  modelValue: String,  // v-model 绑定的值
+  value: String,       // 当前 Radio 的值
+  hasError: Boolean    // 是否显示错误状态
+});
+
+const emit = defineEmits(["update:modelValue"]);
+
+const isSelected = ref(props.modelValue === props.value);
+
+const selectRadio = () => {
+  if (!props.hasError) {
+    emit("update:modelValue", props.value);
+    isSelected.value = true;
+  }
+};
+</script>
+
+<style scoped>
+/* 外部框 */
+.radio-button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cccccc;
+  background-color: #fffae0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Radio 图标 */
+.radio-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #cccccc;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+/* 选中状态 */
+.selected {
+  border-color: #1588df;
+  background-color: #e4f2fd;
+}
+
+.selected .radio-icon {
+  border-color: #1588df;
+}
+
+.radio-center {
+  width: 20px;
+  height: 20px;
+  background-color: #1588df;
+  border-radius: 50%;
+}
+
+/* 错误状态 */
+.error {
+  border-color: #cccccc;
+  background-color: #fff0f0;
+}
+
+.error .radio-icon {
+  border-color: #cccccc;
+}
+</style>
 // 字体族
 $font-primary: "Noto Sans CJK JP", sans-serif;
 $font-system: "Segoe UI", Meiryo, "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
