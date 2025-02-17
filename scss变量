@@ -1,3 +1,55 @@
+// 字体族
+$font-primary: "Noto Sans CJK JP", sans-serif;
+$font-system: "Segoe UI", Meiryo, "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+
+// 字重
+$font-weight-bold: 700;
+$font-weight-medium: 500;
+$font-weight-regular: 400;
+
+// 标题字体大小
+$font-sizes: (
+  "h1": 30pt,
+  "h2": 22pt,
+  "h3": 18pt,
+  "h4": 14pt
+);
+
+// 正文 & 按钮字体大小
+$text-sizes: (
+  "body": 22pt,
+  "caption": 14pt,
+  "button-lg": 22pt,
+  "button-md": 18pt,
+  "button-sm": 14pt
+);
+
+@each $level, $size in $font-sizes {
+  .#{$level} {
+    font-size: $size;
+    font-weight: $font-weight-bold;
+    font-family: $font-primary;
+  }
+}
+@each $name, $size in $text-sizes {
+  .text-#{$name} {
+    font-size: $size;
+    font-family: $font-primary;
+  }
+}
+
+// 按钮字体加上 Medium 权重
+.text-button-lg,
+.text-button-md,
+.text-button-sm {
+  font-weight: $font-weight-medium;
+}
+<p class="text-body">正文文本 22pt Regular</p>
+<p class="text-caption">注释文本 14pt Regular</p>
+<button class="text-button-lg">大按钮</button>
+<button class="text-button-md">中按钮</button>
+<button class="text-button-sm">小按钮</button>
+
 // ==========================
 // _variables.scss
 // 颜色变量定义
