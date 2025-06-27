@@ -1,0 +1,37 @@
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.*;
+
+public class ObjectToFlatStringMapConverter {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    public static Map<String, String> convert(Object obj) {
+        Map<String, Object> rawMap = mapper.convertValue(obj, new TypeReference<Map<String, Object>>() {});
+        Map<String, String> result = new LinkedHashMap<>();
+        flatten("", rawMap, result);
+        return result;
+    }
+
+    private static void flatten(String prefix, Object value, Map<String, String> result) {
+        if (value instanceof Map<?, ?> mapValue) {
+            for (Map.Entry<?, ?> entry : mapValue.entrySet()) {
+                String key = entry.getKey().toString();
+                flatten(prefix + key + ".", entry.getValue(), result);
+            }
+        } else if (value instanceof List<?> listValue) {
+            result.put(prefix.substring(0, prefix.length() - 1), toJson(listValue));
+        } else {
+            result.put(prefix.substring(0, prefix.length() - 1), value != null ? value.toString() : null);
+        }
+    }
+
+    private static String toJson(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON serialization failed", e);
+        }
+    }
+}
